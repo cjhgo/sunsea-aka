@@ -3,6 +3,10 @@ linux
 
 1、http://lxr.linux.no/+trees	在线读linux源码
 
+2、常用操作
+	cp命令
+		
+
 
 
 
@@ -457,5 +461,96 @@ sqlite3
 	(以上内容只是自己每天学习总结，如有不正确的，请多多指正！	－－sunsea1026)
 
 ============================================================================================================================================================================
-20101222
+20101023
+
+1、如何在ubunut下管理googlecode？
+	前些日子，看到徐老师使用googlecode，自己很感兴趣，于是自己也注册了一个，注册是个很简单的事情，但是注册好了，一直找不到管理googlecode的方法，经过网上大量搜索信息，学会了在windowns下如何去管理googlecode，其实很简单，只要下载一个工具即可，该工具的名称叫做“TortoiseSVN”安装好之后，右击鼠标就会看到，如何对其操作还是不会，还可以右击鼠标，TortoiseSVN－>版本库浏览器，这是个图形画界面，很直观。多接触下，多练习就会上手了。但是我大多数时间都是在用ubuntu操作系统，如果想更新googlecode必须要去windows下，让我很不爽，于是网上再次寻找资料，继续学习，终于找出了一条ubuntu下管理googlecode道路，现在仅仅学会了一些简单操作，拿出与大家分享下，如有不正确、不足的地方，请多多指正！
 	
+	1、安装svn（subvertion）
+		sudo apt-get install subversion
+
+	2、打开自己的googlecode代码库，在主页中，选择source，然后点击checkout，会看到两行内容
+		svn checkout https://xxx.googlecode.com/svn/trunk/ xxx --username name
+		svn checkout http://xxx.googlecode.com/svn/trunk/ xxx-read-only
+		我对这两行的理解：
+			第一行：是我们googlecode管理员的对gooelcode代码库管理的链接，通过此链接我们可以对我们的代码库进行更新。
+			第二行：是所有人的阅读我们代码的链接，通过第二行的链接可以对我们代码库的所有内容进行阅读，但是无法更新其内容。
+
+	3、用户名和密码的问题
+		用户名就是我们的用户名，没有疑问，密码并不是我们gmail的密码，这个密码而是googlecode中给我们生成的密码，
+		查看方式：进入我们googlecode主页，source，checkout，注意这一行内容“When prompted, enter your generated googlecode.com password.”
+		点击蓝色部分就会看到我们需要的密码。
+
+	4、复制第一行所有内容，即：svn checkout https://xxx.googlecode.com/svn/trunk/ xxx --username name到终端下，
+		这时会在我们本地建一个代码库，一般在主文件夹下，名字一般是前面链接中的XXX，如果googlecode中有东西，在本地XXX目录中也会有相应的内容。
+
+	5、添加新内容到我们的googlecode
+		把我们需要上传的内容，复制到XXX中，然后执行命令：svn add *（*代表添加所有内容，如果不用*，上传单个文件也可以svn add test），
+		这时，会列出我们所有要上传的内容，每一行前面都会有一个A,代表这是新添加的，到现在我们还没有真正的上传到googlecode，还差一个提交命令，
+		再执行提交命令前，我们可以现看看我们要提交什么东西，使用这个命令：svn st(st是status的简写),这时会告诉我们要对哪些文件进行什么操作，
+		加入发现我们不想提交test文件，我们就要取消他,执行：svn revert test,如果取消全部，执行：svn revert *，假如我们发现将要提交的内容没问题，
+		我们执行命令:svn ci -m "说明信息"，这个时候会把内容提交至googlecode了。
+
+	6、删除googlecode中内容
+		首先先执行：svn up会获取googlecode的最新内容，然后执行：svn delete test.c(test.c就是要删除的内容)，
+		最后还要进行提交，执行：svn ci -m ""，这时过哦哦过了code中的test.c已经被删除了。
+
+	7、常用命令总结：
+		svn checkout https://xxx.googlecode.com/svn/trunk/ xxx --username name		创建本地代码仓库
+		svn up										获取最新版本
+		svn add *									添加内容		
+		svn delete *									删除内容
+		svn revert *									撤销操作，比如add，delete等操作
+		svn st										查看svn状态，一般在svn ci -m ""操作前用
+		svn log										查看版本日志
+		svn info									查看基本信息
+		其他命令也可以查看svn帮助文档，查看帮助文档方法，在终端下，执行：svn ?
+
+	8、几点说明：
+		我学习googlecode参考了一些网上资料，上面的几点内容都是我网上学得，然后根据自己学习体会总结的几点，他们分别是：
+		注册googlecode：			http://www.cnblogs.com/shukunwang
+		windows下管理googlecode：	http://www.uml.org.cn/pzgl/200904246.asp
+		ubuntu下管理googlecode：		http://saw-unix.com/2010/07/linux_google_code_subversion.html
+		电子书：				《采用Subversion进行版本控制(中文).pdf》（下载地址：http://code.google.com/p/sunsea-aka/downloads/list）
+
+============================================================================================================================================================================
+20101027
+
+1、字符串内容再学习
+	1、什么情况下字符串中会自动添加'\0'?
+		以下三种情况会自动添加'\0'：
+		1）定义一个字符指针，并对其进行初始化，此时会自动添加'\0'；
+		2）定一个字符数组，并未指定数组长度，对其初始化会自动添加一个'\0';		
+		3）定一个字符数组，数组的长度大于初始化内容的长度，此时会自动添加'\0'；
+	2、sizeof与strlen的问题
+		char buf[] = "12345";
+
+		printf("%d\n", sizeof(buf));		//6
+		printf("%d\n", strlen(buf));		//5
+		printf("%d\n", sizeof(p));		//4
+		printf("%d\n", strlen(p));		//5
+
+		说明：strlen只认'\0'为结束符，如果找完了buf还找不到'\0'，此时回去内存中的别的位置去找'\0'，直到找到'\0'才结束，
+			所以如果buf中没有'\0'，打印该字符串时，会在打印完buf中的数据还会打印出其他乱码。
+
+2、GDB学习
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
