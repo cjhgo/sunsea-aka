@@ -1,0 +1,26 @@
+1、SecureCRT
+	SecureCRT是一款支持SSH（SSH1和SSH2）的终端仿真程序，同时支持Telnet和rlogin协议。
+2、bin文件安装方法
+	chmod +x /home/用户名/MiguMusic_2010Beta1.bin
+	./MiguMusic_2010Beta1.bin
+3、gdesklet桌面小工具
+
+打开ubuntu更新源列表
+sudo gedit /etc/apt/sources.list
+保存之后
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+cairo-dock源地址
+deb http://repository.glx-dock.org/ubuntu lucid cairo-dock  # For Ubuntu 10.04
+deb http://repository.glx-dock.org/ubuntu karmic cairo-dock  # For Ubuntu 9.10
+deb http://repository.glx-dock.org/ubuntu jaunty cairo-dock  # For Ubuntu 9.04
+deb http://repository.glx-dock.org/ubuntu intrepid cairo-dock  # For Ubuntu 8.10
+deb http://repository.glx-dock.org/ubuntu hardy cairo-dock  # For ubuntu 8.04
+安装cairo-dock
+wget -q http://repository.glx-dock.org/cairo-dock.gpg -O- | sudo apt-key add -
+sudo apt-get update
+sudo apt-get install cairo-dock cairo-dock-plug-ins
+
+
+
