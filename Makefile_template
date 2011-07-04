@@ -1,0 +1,142 @@
+一套的实用完整Makefile参考模板
+近来，经常看到有人询问makefile的写法，这里根据本人经验给出一个应用系统的完整例子，便于各位参考。 
+应用系统的目录结构如下： 
+代码:
+
+~/bin   可执行程式目录 
+~/etc   设置文件目录 
+~/inc   头文件目录 
+~/lib   函数库文件目录 
+~/log   日志文件目录 
+~/src   源程式文件目录 
+~/src/lib   函数库源程式目录 
+~/src/lib/LIB_1   函数库libLIB_1源程式目录 
+~/src/APP_A   子系统APP_A源程式目录 
+~/src/APP_A/mod_a   子系统APP_A模块mod_a源程式目录 
+~/.profile 
+~/makefile 
+
+~/makefile文件内容如下： 
+
+代码:
+
+all: 
+   @MakeSubDir() ＼ 
+   { ＼ 
+      for DIR in `ls|grep ’lib’;ls|grep -v ’lib’`; do ＼ 
+         if [ -d ${DIR} ]; then ＼ 
+            cd ${DIR}; ＼ 
+            MakeSubDir; ＼ 
+            if [ -f makefile -o -f Makefile ]; then ＼ 
+               echo ""; ＼ 
+               pwd; ＼ 
+               make all; ＼ 
+            fi; ＼ 
+            cd ..; ＼ 
+         fi; ＼ 
+      done; ＼ 
+   }; ＼ 
+   MakeSubDir 
+
+tar: 
+   @tar -cf `date +%Y%m%d-%H%M%S`.tar .profile `ls|grep -v ’.tar’` 
+
+~/src/lib/LIB_1/makefile文件内容如下： 
+
+代码:
+
+ALL:   INFO all 
+
+BASEDIR   = $(HOME) 
+INC   = $(BASEDIR)/inc 
+LIB   = $(BASEDIR)/lib 
+
+PRDNAME   = $(LIB)/libLIB_1 
+
+PRODUCT   = $(PRDNAME).a $(PRDNAME).so 
+
+OBJS   = LIB_1_f1.o LIB_1_f2.o 
+
+AR   = ar <特定平台ar可选参数> 
+CC   = cc <特定平台cc可选参数> 
+
+all:   $(PRODUCT) 
+
+$(PRDNAME).a:   $(OBJS) 
+   @echo "  Making $@ ..." 
+   @$(AR) -r $@ $(OBJS) 
+
+$(PRDNAME).so:   $(OBJS) 
+   @echo "  Making $@ ..." 
+   @$(CC) -G -o $@ $(OBJS) 
+
+.c.o:   *.h $(INC)/*.h 
+   @echo "  Compiling $< ..." 
+   @$(CC) -c -I$(INC) $< 
+
+INFO: 
+   @echo "  make all - same with ’make’ except this message" 
+   @echo "  make clear - remove object files" 
+   @echo "  make clean - remove all object and target files" 
+   @echo "" 
+
+clear:   FORCE 
+   @rm -f *.o 
+
+clean:   FORCE clear 
+   @rm -f $(PRODUCT) 
+
+FORCE: 
+
+~/src/APP_A/mod_a/makefile文件内容如下： 
+
+代码:
+
+ALL:   INFO all 
+
+BASEDIR   = $(HOME) 
+INC   = $(BASEDIR)/inc 
+LIB   = $(BASEDIR)/lib 
+BIN   = $(BASEDIR)/bin 
+
+MODULE   = $(BIN)/APP_A_mod_a 
+TESTER   = APP_A_mod_a_t 
+PRODUCT   = $(SERVER) $(TESTER) 
+
+CC   = cc <特定平台cc可选参数> 
+
+all:   $(PRODUCT) 
+
+$(MODULE):   APP_A_mod_a.o 
+   @echo "  Making $@ ..." 
+   @$(CC) $? -o$@ -L$(LIB) -lLIB_1 
+
+APP_A_mod_a_t:   APP_A_mod_a_t.o 
+   @echo "  Making $@ ..." 
+   @$(CC) $? -o$@ -L$(LIB) -lLIB_1 
+
+.c.o:   *.h $(INC)/*.h 
+   @echo "  Compiling $< ..." 
+   @$(CC) -c -I$(INC) $< 
+
+INFO: 
+   @echo "  make all - same with ’make’ except this message" 
+   @echo "  make clear - remove object files" 
+   @echo "  make clean - remove all object and target files" 
+   @echo "" 
+
+clear:   FORCE 
+   @rm -f *.o 
+
+clean:   FORCE clear 
+   @rm -f $(PRODUCT) 
+
+FORCE: 
+
+使用方法： 
+1.在主目录下使用’make’命令能够首先建立函数库，然后建立所有目标。 
+2.在主目录下使用’make tar’命令能够对整个系统进行打包，生成的文件以日期和时间命名。 
+3.在最下层子目录中直接使用’make’命令会首先给出用法提示，然后建立本目录所有目标。 
+4.在最下层子目录中使用’make all’命令不出现提示信息，直接建立本目录所有目标。 
+5.在最下层子目录中使用’make clear’命令能清除本目录的所有.o文件。 
+6.在最下层子目录中使用’make clean’命令能清除本目录的所有.o文件和建立的所有目标。
