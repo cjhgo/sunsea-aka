@@ -1,0 +1,20 @@
+CC = gcc -g 
+#CC = /opt/yszb6410/4.4.1/bin/arm-linux-gcc -static
+#CC = /opt/friendlyarm_2440/arm/4.3.2/bin/arm-linux-gcc -static
+#CC = /usr/local/arm/4.3.2/bin/arm-linux-gcc -static
+#CC = arm-none-linux-gnueabi-gcc -static 
+
+TARGET = digi_jpeg
+
+OBJS = main.o jpeg.o  fb.o style.o search_img.o
+all:$(TARGET)
+
+$(TARGET):$(OBJS)
+#	$(CC) -o $(TARGET) $(OBJS) -L../../lib/ -ljpeg -lm
+#	$(CC) -o $(TARGET) $(OBJS) -L../../lib/friendlyarm_2440/ -ljpeg -lm
+	$(CC) -o $(TARGET) $(OBJS) -L/home/zsx/xulaoshi/lib_pc -ljpeg -lm
+#	$(CC) -o $(TARGET) $(OBJS) -L/usr/local/lib/ -ljpeg -lm
+#	$(CC) -o $(TARGET) $(OBJS) -L/home/tsuibin/code/framebuffer/jpeg/lib/ -ljpeg -lm
+
+clean:
+	rm $(OBJS) $(TARGET) -f
