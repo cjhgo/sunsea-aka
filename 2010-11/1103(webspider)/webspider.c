@@ -348,7 +348,7 @@ int rscallback(void *p, int column, char **column_val, char **column_name)
 	return 0;
 }
 
-int other (char *p)
+int other(char *p)
 {
 	char *s1 = "+";
 	char *s2 = "clickurl";
